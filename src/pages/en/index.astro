@@ -5,9 +5,9 @@ import { useTranslations } from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ArtworkCard from "@/components/ArtworkCard.astro";
 
-const lang: Lang = "pt";
+const lang: Lang = "en";
 const t = useTranslations(lang);
-const alternateUrl = "/en/";
+const alternateUrl = "/";
 const site = Astro.site?.origin ?? "https://annalu.art";
 
 const allArtworks = await getCollection("artworks");
@@ -18,7 +18,7 @@ const latestArtworks = allArtworks
 const seo = {
   title: t("hero.title"),
   description: t("hero.subtitle"),
-  canonical: `${site}/`,
+  canonical: `${site}/en/`,
 };
 ---
 
@@ -35,7 +35,7 @@ const seo = {
       {t("hero.subtitle")}
     </p>
     <a
-      href="/galeria"
+      href="/en/gallery"
       class="mt-8 inline-block rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-medium text-white
              transition-colors hover:bg-[var(--color-accent-hover)]
              focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"

@@ -1,0 +1,34 @@
+---
+import type { Lang } from "@/i18n";
+import { useTranslations } from "@/i18n";
+
+interface Props {
+  lang: Lang;
+  alternateUrl: string;
+}
+
+const { lang, alternateUrl } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<nav aria-label={t("aria.languagePicker")} class="flex items-center gap-1 text-sm">
+  {lang === "pt" ? (
+    <span class="font-semibold text-[var(--color-text)]" aria-current="page">PT</span>
+    <span class="text-[var(--color-text-muted)]">/</span>
+    <a
+      href={alternateUrl}
+      class="text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors"
+    >
+      EN
+    </a>
+  ) : (
+    <a
+      href={alternateUrl}
+      class="text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors"
+    >
+      PT
+    </a>
+    <span class="text-[var(--color-text-muted)]">/</span>
+    <span class="font-semibold text-[var(--color-text)]" aria-current="page">EN</span>
+  )}
+</nav>

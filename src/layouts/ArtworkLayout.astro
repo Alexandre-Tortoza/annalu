@@ -1,0 +1,147 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { Lang } from "@/i18n";
+import { useTranslations, getAlternateUrl, getLocalizedPath } from "@/i18n";
+import BaseLayout from "./BaseLayout.astro";
+
+interface ArtworkNav {
+  id: string;
+  title: string;
+  titlePt: string;
+}
+
+interface Props {
+  artwork: CollectionEntry<"artworks">;
+  lang: Lang;
+  previous?: ArtworkNav;
+  next?: ArtworkNav;
+}
+
+const { artwork, lang, previous, next } = Astro.props;
+const { data } = artwork;
+const t = useTranslations(lang);
+
+const title = lang === "pt" ? data.titlePt : data.title;
+const description = lang === "pt" ? data.descriptionPt : data.description;
+const site = Astro.site?.origin ?? "https://annalu.art";
+const currentPath = Astro.url.pathname;
+const alternateUrl = getAlternateUrl(currentPath, lang === "pt" ? "en" : "pt");
+
+const seo = {
+  title,
+  description,
+  image: data.cover.src,
+  canonical: `${site}${currentPath}`,
+  jsonLd: {
+    "@context": "https://schema.org",
+    "@type": "VisualArtwork",
+    name: data.title,
+    description: data.description,
+    image: `${site}${data.cover.src}`,
+    dateCreated: data.publishedAt.toISOString().split("T")[0],
+    ...(data.technique && { artMedium: data.technique }),
+    ...(data.dimensions && {
+      width: { "@type": "Distance", name: data.dimensions.split(" x ")[0]?.trim() },
+      height: { "@type": "Distance", name: data.dimensions.split(" x ")[1]?.trim() },
+    }),
+    creator: {
+      "@type": "Person",
+      name: "AnnaLu",
+    },
+  },
+};
+
+function getPrevNextHref(nav: ArtworkNav): string {
+  return getLocalizedPath(`/artwork/${nav.id}`, lang);
+}
+
+function getPrevNextTitle(nav: ArtworkNav): string {
+  return lang === "pt" ? nav.titlePt : nav.title;
+}
+---
+
+<BaseLayout seo={seo} lang={lang} alternateUrl={alternateUrl}>
+  <article class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+    <!-- Cover image -->
+    <div class="overflow-hidden rounded-xl" data-animate="cover">
+      <img
+        src={data.cover.src}
+        alt={data.cover.alt}
+        width="1200"
+        height="800"
+        loading="eager"
+        class="w-full object-cover"
+      />
+    </div>
+
+    <!-- Title & metadata -->
+    <header class="mt-8">
+      <h1 class="text-3xl font-bold tracking-tight text-[var(--color-text)] sm:text-4xl font-[var(--font-display)]">
+        {title}
+      </h1>
+
+      <div class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-[var(--color-text-muted)]">
+        {data.technique && (
+          <span>
+            <span class="font-medium">{t("artwork.technique")}:</span> {data.technique}
+          </span>
+        )}
+        {data.dimensions && (
+          <span>
+            <span class="font-medium">{t("artwork.dimensions")}:</span> {data.dimensions}
+          </span>
+        )}
+        {data.year && (
+          <span>
+            <span class="font-medium">{t("artwork.year")}:</span> {data.year}
+          </span>
+        )}
+      </div>
+
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {data.tags.map((tag) => (
+          <span class="rounded-full bg-[var(--color-accent-light)] px-2.5 py-0.5 text-xs text-[var(--color-accent)]">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <!-- Body content -->
+    <div class="prose mt-10 max-w-none text-[var(--color-text)] prose-headings:text-[var(--color-text)] prose-p:text-[var(--color-text-muted)]">
+      <slot />
+    </div>
+
+    <!-- Previous / Next navigation -->
+    {(previous || next) && (
+      <nav
+        class="mt-12 flex items-center justify-between border-t border-[var(--color-border)] pt-6"
+        aria-label="Artwork navigation"
+      >
+        {previous ? (
+          <a
+            href={getPrevNextHref(previous)}
+            class="group flex flex-col text-sm"
+          >
+            <span class="text-[var(--color-text-muted)]">{t("artwork.previous")}</span>
+            <span class="font-medium text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
+              {getPrevNextTitle(previous)}
+            </span>
+          </a>
+        ) : <div />}
+
+        {next ? (
+          <a
+            href={getPrevNextHref(next)}
+            class="group flex flex-col items-end text-sm"
+          >
+            <span class="text-[var(--color-text-muted)]">{t("artwork.next")}</span>
+            <span class="font-medium text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
+              {getPrevNextTitle(next)}
+            </span>
+          </a>
+        ) : <div />}
+      </nav>
+    )}
+  </article>
+</BaseLayout>

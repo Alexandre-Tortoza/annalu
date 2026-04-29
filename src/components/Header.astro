@@ -1,0 +1,126 @@
+---
+import type { Lang } from "@/i18n";
+import { useTranslations, getLocalizedPath } from "@/i18n";
+import ThemeToggle from "./ThemeToggle.astro";
+import LanguagePicker from "./LanguagePicker.astro";
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+  alternateUrl: string;
+}
+
+const { lang, currentPath, alternateUrl } = Astro.props;
+const t = useTranslations(lang);
+
+const navLinks = [
+  { label: t("nav.home"), href: getLocalizedPath("/", lang) },
+  { label: t("nav.gallery"), href: getLocalizedPath("/galeria", lang) },
+];
+
+function isActive(href: string): boolean {
+  const normalized = currentPath.endsWith("/") ? currentPath.slice(0, -1) : currentPath;
+  const normalizedHref = href.endsWith("/") ? href.slice(0, -1) : href;
+  if (normalizedHref === "" || normalizedHref === "/en") {
+    return normalized === "" || normalized === "/" || normalized === "/en";
+  }
+  return normalized === normalizedHref;
+}
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-[var(--color-border)]
+         bg-[var(--color-surface)]/95 backdrop-blur-sm"
+>
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+    <a
+      href={getLocalizedPath("/", lang)}
+      class="text-xl font-bold tracking-tight font-[var(--font-display)]
+             text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+    >
+      AnnaLu
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-6 sm:flex" aria-label="Main navigation">
+      {navLinks.map(({ label, href }) => (
+        <a
+          href={href}
+          class:list={[
+            "text-sm transition-colors",
+            isActive(href)
+              ? "font-semibold text-[var(--color-accent)]"
+              : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+          ]}
+          aria-current={isActive(href) ? "page" : undefined}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hidden items-center gap-2 sm:flex">
+      <LanguagePicker lang={lang} alternateUrl={alternateUrl} />
+      <ThemeToggle lang={lang} />
+    </div>
+
+    <!-- Mobile menu -->
+    <details class="group sm:hidden">
+      <summary
+        class="inline-flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer
+               hover:bg-[var(--color-surface-hover)] list-none
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+        aria-label={t("aria.openMenu")}
+      >
+        <svg
+          class="w-5 h-5 group-open:hidden"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+        <svg
+          class="hidden w-5 h-5 group-open:block"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </summary>
+      <nav
+        class="absolute left-0 right-0 top-full border-b border-[var(--color-border)]
+               bg-[var(--color-surface)] px-4 py-4"
+        aria-label="Mobile navigation"
+      >
+        <div class="flex flex-col gap-4">
+          {navLinks.map(({ label, href }) => (
+            <a
+              href={href}
+              class:list={[
+                "text-sm transition-colors",
+                isActive(href)
+                  ? "font-semibold text-[var(--color-accent)]"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+              ]}
+              aria-current={isActive(href) ? "page" : undefined}
+            >
+              {label}
+            </a>
+          ))}
+          <div class="flex items-center gap-3 pt-2 border-t border-[var(--color-border)]">
+            <LanguagePicker lang={lang} alternateUrl={alternateUrl} />
+            <ThemeToggle lang={lang} />
+          </div>
+        </div>
+      </nav>
+    </details>
+  </div>
+</header>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://annalu.art/sitemap-index.xml

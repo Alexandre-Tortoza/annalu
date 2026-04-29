@@ -1,0 +1,34 @@
+---
+import { getCollection, render } from "astro:content";
+import type { Lang } from "@/i18n";
+import ArtworkLayout from "@/layouts/ArtworkLayout.astro";
+
+export async function getStaticPaths() {
+  const artworks = await getCollection("artworks");
+  const sorted = artworks.sort(
+    (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+  );
+
+  return sorted.map((artwork, index) => {
+    const previous = sorted[index + 1]
+      ? { id: sorted[index + 1].id, title: sorted[index + 1].data.title, titlePt: sorted[index + 1].data.titlePt }
+      : undefined;
+    const next = sorted[index - 1]
+      ? { id: sorted[index - 1].id, title: sorted[index - 1].data.title, titlePt: sorted[index - 1].data.titlePt }
+      : undefined;
+
+    return {
+      params: { slug: artwork.id },
+      props: { artwork, previous, next },
+    };
+  });
+}
+
+const lang: Lang = "en";
+const { artwork, previous, next } = Astro.props;
+const { Content } = await render(artwork);
+---
+
+<ArtworkLayout artwork={artwork} lang={lang} previous={previous} next={next}>
+  <Content />
+</ArtworkLayout>

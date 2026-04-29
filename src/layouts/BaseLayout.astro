@@ -1,0 +1,131 @@
+---
+import type { Lang } from "@/i18n";
+import SEO from "@/components/SEO.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+
+interface SeoProps {
+  title: string;
+  description: string;
+  image?: string;
+  canonical: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+interface Props {
+  seo: SeoProps;
+  lang: Lang;
+  alternateUrl: string;
+}
+
+const { seo, lang, alternateUrl } = Astro.props;
+const currentPath = Astro.url.pathname;
+const htmlLang = lang === "pt" ? "pt-BR" : "en";
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- FWOT prevention: apply theme before paint -->
+    <script is:inline>
+      ;(function () {
+        var stored = localStorage.getItem("theme");
+        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (stored === "dark" || (!stored && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
+    <SEO {...seo} lang={lang} />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header lang={lang} currentPath={currentPath} alternateUrl={alternateUrl} />
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <Footer lang={lang} />
+
+    <script>
+      import gsap from "gsap";
+      import ScrollTrigger from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Hero fade-in
+        gsap.utils.toArray<HTMLElement>("[data-animate='hero']").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+          );
+        });
+
+        // Card stagger reveal
+        const cards = gsap.utils.toArray<HTMLElement>("[data-animate='card']");
+        cards.forEach((el, i) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              delay: i * 0.1,
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+              },
+            },
+          );
+        });
+
+        // Mosaic row slide-in
+        gsap.utils.toArray<HTMLElement>("[data-animate='mosaic-row']").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, x: -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              scrollTrigger: {
+                trigger: el,
+                start: "top 80%",
+              },
+            },
+          );
+        });
+
+        // Cover parallax
+        gsap.utils.toArray<HTMLElement>("[data-animate='cover']").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { y: 0 },
+            {
+              y: 60,
+              scrollTrigger: {
+                trigger: el,
+                start: "top top",
+                end: "bottom top",
+                scrub: 1,
+              },
+            },
+          );
+        });
+      });
+    </script>
+  </body>
+</html>
