@@ -67,16 +67,28 @@ BaseLayout.astro          ← HTML shell, SEO, Header, Footer, GSAP init
 
 Components (all in `src/components/`):
 - `SEO.astro` — head meta (title, description, OG, Twitter Card, canonical, hreflang, JSON-LD)
-- `Header.astro` — logo, nav, ThemeToggle, LanguagePicker, responsive mobile menu
+- `Header.astro` — logo, nav, ThemeToggle, LanguagePicker, responsive mobile menu. `isLanding` prop hides header until scroll threshold on landing pages.
+- `Hero.astro` — full-screen hero with animated SVG ocean waves, parallax, and mouse interaction. Nav links (Home · Gallery) below title.
 - `Footer.astro` — social links, copyright
 - `ThemeToggle.astro` — dark/light toggle with localStorage persistence
 - `LanguagePicker.astro` — PT/EN links with `alternateUrl` prop
 - `ArtworkCard.astro` — artwork summary card for landing page
+- `EditorialStack.astro` — scroll-triggered image pile (latest 3 artwork covers) with blockquote. Template only — GSAP animation lives in BaseLayout.
 - `MosaicRow.astro` — 12-column CSS grid row for gallery mosaic
+
+### Helpers
+
+- `src/lib/artworks.ts` — `sortByDate()` sorts artworks by `publishedAt` descending. Used across all pages and components that list artworks.
 
 ### GSAP
 
-All GSAP code centralized in `BaseLayout.astro` `<script>` block. Uses `gsap.matchMedia()` with `(prefers-reduced-motion: no-preference)` guard. Components mark elements with `data-animate` attributes (`hero`, `card`, `mosaic-row`, `cover`).
+All GSAP code centralized in `BaseLayout.astro` `<script>` block. Uses `gsap.matchMedia()` with `(prefers-reduced-motion: no-preference)` guard. Components are template-only and mark elements with `data-animate` attributes — they do **not** contain their own `<script>` blocks for GSAP.
+
+Current `data-animate` values: `hero`, `hero-ocean`, `editorial-text`, `editorial-stack`, `card`, `mosaic-row`, `cover`.
+
+Key constants in the GSAP block:
+- `HEADER_SCROLL_THRESHOLD` — px scroll before landing header appears
+- `SPEED_MULTIPLIER` — scales all wave animation speeds (higher = faster)
 
 ### SEO
 
