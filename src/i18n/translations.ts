@@ -5,7 +5,6 @@ export const translations = {
     "hero.title": "Arte que conta historias",
     "hero.subtitle":
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum.",
-    "hero.cta": "Ver Galeria",
     "gallery.title": "Galeria",
     "gallery.description":
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Explore todas as obras da colecao.",
@@ -32,7 +31,6 @@ export const translations = {
     "hero.title": "Art that tells stories",
     "hero.subtitle":
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum.",
-    "hero.cta": "View Gallery",
     "gallery.title": "Gallery",
     "gallery.description":
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Explore all artworks in the collection.",

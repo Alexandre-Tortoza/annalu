@@ -4,15 +4,14 @@ import type { Lang } from "@/i18n";
 import { useTranslations } from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import MosaicRow from "@/components/MosaicRow.astro";
+import { sortByDate } from "@/lib/artworks";
 
 const lang: Lang = "pt";
 const t = useTranslations(lang);
 const alternateUrl = "/en/gallery";
 const site = Astro.site?.origin ?? "https://annalu.art";
 
-const artworks = (await getCollection("artworks")).sort(
-  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
-);
+const artworks = sortByDate(await getCollection("artworks"));
 
 const seo = {
   title: t("gallery.title"),

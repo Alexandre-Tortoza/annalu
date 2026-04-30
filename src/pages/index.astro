@@ -4,6 +4,9 @@ import type { Lang } from "@/i18n";
 import { useTranslations } from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ArtworkCard from "@/components/ArtworkCard.astro";
+import EditorialStack from "@/components/EditorialStack.astro";
+import Hero from "@/components/Hero.astro";
+import { sortByDate } from "@/lib/artworks";
 
 const lang: Lang = "pt";
 const t = useTranslations(lang);
@@ -11,9 +14,7 @@ const alternateUrl = "/en/";
 const site = Astro.site?.origin ?? "https://annalu.art";
 
 const allArtworks = await getCollection("artworks");
-const latestArtworks = allArtworks
-  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
-  .slice(0, 3);
+const latestArtworks = sortByDate(allArtworks).slice(0, 3);
 
 const seo = {
   title: t("hero.title"),
@@ -22,51 +23,15 @@ const seo = {
 };
 ---
 
-<BaseLayout seo={seo} lang={lang} alternateUrl={alternateUrl}>
-  <!-- Hero -->
-  <section
-    data-animate="hero"
-    class="gsap-target mx-auto max-w-6xl px-4 py-20 text-center sm:px-6 sm:py-32"
-  >
-    <h1 class="text-4xl font-bold tracking-tight text-[var(--color-text)] sm:text-5xl md:text-6xl font-serif">
-      {t("hero.title")}
-    </h1>
-    <p class="mx-auto mt-6 max-w-2xl text-lg text-[var(--color-text-muted)]">
-      {t("hero.subtitle")}
-    </p>
-    <a
-      href="/galeria"
-      class="mt-8 inline-block rounded-lg bg-[var(--color-accent)] px-6 py-3 text-sm font-medium text-white
-             transition-colors hover:bg-[var(--color-accent-hover)]
-             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
-    >
-      {t("hero.cta")}
-    </a>
-  </section>
+<BaseLayout seo={seo} lang={lang} alternateUrl={alternateUrl} isLanding>
+  <Hero lang={lang}/>
 
-  <!-- Editorial grid -->
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-    <div class="grid gap-8 md:grid-cols-2 md:items-center">
-      <blockquote class="text-2xl font-light italic text-[var(--color-text)] leading-relaxed font-serif">
-        &ldquo;{t("editorial.quote")}&rdquo;
-      </blockquote>
-      <div class="overflow-hidden rounded-xl">
-        <img
-          src="/images/editorial-photo.jpg"
-          alt="Editorial artwork composition"
-          width="600"
-          height="400"
-          loading="lazy"
-          decoding="async"
-          class="w-full object-cover"
-        />
-      </div>
-    </div>
-  </section>
+
+  <EditorialStack artworks={allArtworks} lang={lang} />
 
   <!-- Latest works -->
   <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-    <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl">
+    <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl font-serif">
       {t("section.latest")}
     </h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -91,7 +56,7 @@ const seo = {
         />
       </div>
       <div>
-        <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl">
+        <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl font-serif">
           {t("section.about")}
         </h2>
         <p class="mt-4 text-[var(--color-text-muted)] leading-relaxed">
