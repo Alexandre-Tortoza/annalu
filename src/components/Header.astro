@@ -8,9 +8,10 @@ interface Props {
   lang: Lang;
   currentPath: string;
   alternateUrl: string;
+  isLanding?: boolean;
 }
 
-const { lang, currentPath, alternateUrl } = Astro.props;
+const { lang, currentPath, alternateUrl, isLanding = false } = Astro.props;
 const t = useTranslations(lang);
 
 const navLinks = [
@@ -29,8 +30,11 @@ function isActive(href: string): boolean {
 ---
 
 <header
-  class="sticky top-0 z-50 border-b border-[var(--color-border)]
-         bg-[var(--color-surface)]/95 backdrop-blur-sm"
+  class:list={[
+    "top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur-sm shadow-black/01 shadow-lg",
+    isLanding ? "fixed inset-x-0 header-landing" : "sticky",
+  ]}
+  data-landing-header={isLanding ? "" : undefined}
 >
   <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
     <a
@@ -124,3 +128,11 @@ function isActive(href: string): boolean {
     </details>
   </div>
 </header>
+
+<style>
+  .header-landing {
+    opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+</style>
