@@ -8,6 +8,90 @@ The content system is built on Astro's Content Collections with Zod validation. 
 
 ---
 
+## Quick Reference
+
+### Minimal Artwork Example
+
+The bare minimum to create a valid artwork:
+
+```yaml
+---
+title: "Untitled"
+titlePt: "Sem Título"
+description: "A brief description in English."
+descriptionPt: "Uma breve descrição em português."
+publishedAt: 2024-04-28
+cover:
+  src: "/images/artwork-cover.jpg"
+  alt: "What the image shows"
+images:
+  - src: "/images/artwork-1.jpg"
+    alt: "Description of this image"
+tags: ["abstract"]
+mosaic:
+  - imageIndex: 0
+    colStart: 1
+    colSpan: 12
+---
+
+Brief description here.
+```
+
+### Complete Artwork Example
+
+All available fields populated:
+
+```yaml
+---
+title: "Ocean Dreams"
+titlePt: "Sonhos do Oceano"
+description: "An abstract acrylic painting exploring the interplay of water, light, and emotion through fluid brushwork and layered color."
+descriptionPt: "Uma pintura acrílica abstrata explorando a interação da água, luz e emoção através de pinceladas fluidas e cores em camadas."
+publishedAt: 2024-01-15
+cover:
+  src: "/images/ocean-dreams-cover.jpg"
+  alt: "Abstract acrylic painting with flowing blues, teals, and white brushstrokes on canvas"
+images:
+  - src: "/images/ocean-dreams-1.jpg"
+    alt: "Full composition view of the acrylic painting"
+    caption: "Complete work"
+  - src: "/images/ocean-dreams-2.jpg"
+    alt: "Detail of the center area showing layered blue tones"
+    caption: "Center detail"
+  - src: "/images/ocean-dreams-3.jpg"
+    alt: "Close-up of the bottom edge showing texture and color transition"
+tags: ["abstract", "acrylic", "water", "emotion"]
+technique: "Acrylic on canvas"
+dimensions: "100 × 80 cm"
+year: 2023
+featured: true
+mosaic:
+  - imageIndex: 0
+    colStart: 1
+    colSpan: 8
+    rowSpan: 2
+  - imageIndex: 1
+    colStart: 9
+    colSpan: 4
+    rowSpan: 1
+  - imageIndex: 2
+    colStart: 9
+    colSpan: 4
+    rowSpan: 1
+shop:
+  available: false
+  price: 150000
+  stock: 1
+  sku: "ART-2023-001"
+---
+
+# Detailed Description
+
+This artwork explores the contrast between [description content...]
+```
+
+---
+
 ## Content Collection: `artworks`
 
 ### Location
@@ -19,6 +103,42 @@ All artwork files live in: `src/content/artworks/`
 - **Filename** becomes the artwork ID/slug
 - Use kebab-case (lowercase, hyphens): `masterpiece.md`, `watercolor-abstract.md`
 - The slug will appear in URLs: `/artwork/masterpiece`
+
+---
+
+## Content Schema Cheat Sheet
+
+Complete reference table for all available frontmatter fields:
+
+| Field | Type | Required | Default | Min/Max | Description |
+|-------|------|----------|---------|---------|-------------|
+| **title** | string | ✅ | — | — | Artwork title in English |
+| **titlePt** | string | ✅ | — | — | Artwork title in Portuguese |
+| **description** | string | ✅ | — | max 160 chars | Short description in English (used in meta tags) |
+| **descriptionPt** | string | ✅ | — | max 160 chars | Short description in Portuguese (used in meta tags) |
+| **publishedAt** | date | ✅ | — | YYYY-MM-DD | Publication date (used for sorting) |
+| **cover** | object | ✅ | — | — | Cover image metadata object |
+| **cover.src** | string | ✅ | — | — | Path to cover image in `public/images/` |
+| **cover.alt** | string | ✅ | — | — | Accessibility alt text for cover image |
+| **images** | array | ✅ | — | min 1 item | Array of additional artwork images |
+| **images[].src** | string | ✅ | — | — | Path to image in `public/images/` |
+| **images[].alt** | string | ✅ | — | — | Accessibility alt text (required for each) |
+| **images[].caption** | string | ❌ | — | — | Optional caption displayed under image |
+| **tags** | array | ✅ | — | — | Array of tag strings for categorization |
+| **technique** | string | ❌ | — | — | Artistic technique/medium (e.g., "Acrylic on canvas") |
+| **dimensions** | string | ❌ | — | — | Physical dimensions (e.g., "100 × 80 cm") |
+| **year** | number | ❌ | — | 1900–2100 | Year artwork was created |
+| **featured** | boolean | ❌ | `false` | — | Show in "latest works" on landing page? |
+| **mosaic** | array | ❌ | — | min 1 item if gallery | Grid layout specification (see Mosaic section) |
+| **mosaic[].imageIndex** | number | ✅ | — | 0–∞ | Which image from `images[]` to display |
+| **mosaic[].colStart** | number | ✅ | — | 1–12 | Starting column in 12-column grid |
+| **mosaic[].colSpan** | number | ✅ | — | 1–12 | How many columns to span |
+| **mosaic[].rowSpan** | number | ❌ | `1` | 1–∞ | How many rows to span |
+| **shop** | object | ❌ | — | — | **Phase 2:** E-commerce data (disabled Phase 1) |
+| **shop.available** | boolean | ❌ | — | — | Is the artwork for sale? |
+| **shop.price** | number | ❌ | — | 0–∞ | Price in cents (e.g., 150000 = $1500) |
+| **shop.stock** | number | ❌ | — | 0–∞ | Quantity in stock |
+| **shop.sku** | string | ❌ | — | — | Stock keeping unit for inventory |
 
 ---
 
@@ -157,9 +277,25 @@ Row2 │   │   │   │   │   │   │   │   │   │   │   │   │
 }
 ```
 
-### Examples
+### Example Layouts
 
-#### Two images side-by-side (1 row)
+**See** [Common Patterns — Pattern 1: Setting Up Mosaic Layouts](#pattern-1-setting-up-mosaic-layouts) **for detailed examples and code.**
+
+---
+
+## Common Patterns & Examples
+
+### Pattern 1: Setting Up Mosaic Layouts
+
+#### Simple: Single full-width image
+```yaml
+mosaic:
+  - imageIndex: 0
+    colStart: 1
+    colSpan: 12
+```
+
+#### Two images side-by-side
 ```yaml
 mosaic:
   - imageIndex: 0
@@ -170,31 +306,24 @@ mosaic:
     colSpan: 6
 ```
 
-#### Feature image (wide) with two small images below
+#### L-shaped layout (feature image + details)
 ```yaml
+images:
+  - src: "/images/work-1.jpg"
+    alt: "Main composition"
+  - src: "/images/work-2.jpg"
+    alt: "Detail shot"
+  - src: "/images/work-3.jpg"
+    alt: "Close-up texture"
 mosaic:
-  - imageIndex: 0
-    colStart: 1
-    colSpan: 12     # Full width
-  - imageIndex: 1
-    colStart: 1
-    colSpan: 6
-  - imageIndex: 2
-    colStart: 7
-    colSpan: 6
-```
-
-#### L-shaped layout
-```yaml
-mosaic:
-  - imageIndex: 0
+  - imageIndex: 0      # Large image on left
     colStart: 1
     colSpan: 8
-    rowSpan: 2      # Tall image on left
-  - imageIndex: 1
+    rowSpan: 2
+  - imageIndex: 1      # Small image top-right
     colStart: 9
     colSpan: 4
-  - imageIndex: 2
+  - imageIndex: 2      # Small image bottom-right
     colStart: 9
     colSpan: 4
 ```
@@ -213,11 +342,134 @@ mosaic:
     colSpan: 4
 ```
 
+#### Feature image (full width) with 2 below
+```yaml
+mosaic:
+  - imageIndex: 0      # Full width top
+    colStart: 1
+    colSpan: 12
+  - imageIndex: 1      # Half width left
+    colStart: 1
+    colSpan: 6
+  - imageIndex: 2      # Half width right
+    colStart: 7
+    colSpan: 6
+```
+
+---
+
+### Pattern 2: Adding Multiple Images
+
+Every artwork can have multiple images. Reference them by index in the `mosaic` field:
+
+```yaml
+images:
+  - src: "/images/ocean-1.jpg"
+    alt: "Full composition from front view"
+    caption: "Entire painting"
+  - src: "/images/ocean-2.jpg"
+    alt: "Detail of the blue layer showing brushwork"
+    caption: "Center detail"
+  - src: "/images/ocean-3.jpg"
+    alt: "Macro shot of texture in bottom corner"
+    caption: "Surface detail"
+  - src: "/images/ocean-4.jpg"
+    alt: "Work-in-progress shot during creation"
+    caption: "In progress"
+
+mosaic:
+  - imageIndex: 0    # Use first image
+    colStart: 1
+    colSpan: 12
+  - imageIndex: 1    # Use second image
+    colStart: 1
+    colSpan: 6
+  - imageIndex: 2    # Use third image
+    colStart: 7
+    colSpan: 6
+  # imageIndex: 3 (fourth image) is not shown in gallery
+  # but still available for detail page
+```
+
+---
+
+### Pattern 3: Managing Bilingual Content
+
+All text fields have English and Portuguese versions:
+
+```yaml
+# Titles
+title: "Ocean Dreams"
+titlePt: "Sonhos do Oceano"
+
+# Descriptions (short, for meta tags)
+description: "Abstract acrylic painting exploring water and light."
+descriptionPt: "Pintura acrílica abstrata explorando água e luz."
+
+# Techniques and metadata are NOT translated (same for both languages)
+technique: "Acrylic on canvas"
+dimensions: "100 × 80 cm"
+year: 2023
+```
+
+**Rule:** Only `title`, `titlePt`, `description`, and `descriptionPt` are bilingual. All other fields (technique, dimensions, tags) use the same value for both languages.
+
+---
+
+### Pattern 4: Featured vs. Non-Featured Artworks
+
+#### Featured (appears on landing page)
+```yaml
+featured: true
+publishedAt: 2024-01-15
+```
+
+#### Non-featured (gallery only)
+```yaml
+featured: false
+# Or omit 'featured' entirely (defaults to false)
+publishedAt: 2023-06-20
+```
+
+The landing page displays the 3 most recent **featured** artworks (sorted by `publishedAt` descending). Update `publishedAt` to control the order.
+
+---
+
+## Validation Rules & Constraints
+
+### Field Constraints
+
+| Constraint | Affected Field | Example | Error |
+|-----------|--------|---------|-------|
+| **Max 160 chars** | `description`, `descriptionPt` | Descriptions used in social media preview | `Error: description too long (167 > 160)` |
+| **YYYY-MM-DD format** | `publishedAt` | `2024-01-15` (valid), `01/15/2024` (invalid) | `Error: Invalid date format` |
+| **1–12 range** | `mosaic[].colStart`, `mosaic[].colSpan` | Grid columns must be in valid range | `Error: colStart must be 1-12` |
+| **All alt text required** | `cover.alt`, `images[].alt` | Every image must have descriptive alt text | `Error: Missing required alt text` |
+| **Kebab-case filenames** | File name (not frontmatter) | `ocean-dreams.md` (✅), `ocean dreams.md` (❌) | URLs become malformed |
+| **Unique file names** | File name | No two artworks can have the same filename | Second one overwrites first in slug conflicts |
+
+---
+
+### Validation During Build
+
+Run this before pushing to catch errors:
+
+```bash
+pnpm astro check
+```
+
+This command validates all content files against the schema and reports:
+- Missing required fields
+- Invalid date formats
+- Type mismatches
+- Alt text issues
+- Mosaic grid positioning errors
+
 ---
 
 ## Markdown Body Content
 
-After the frontmatter (the `---` closing), write your artwork description in Markdown:
+After the frontmatter (the closing `---`), write your artwork description in Markdown:
 
 ```markdown
 ---
@@ -269,10 +521,11 @@ This is a horizontal rule.
 
 Before creating the `.md` file:
 
-1. Prepare high-quality image files (JPG, PNG, etc.)
-2. Recommended minimum size: **800×600px** for covers
+1. Prepare high-quality image files (JPG, PNG, WebP recommended)
+2. Recommended minimum size: **800×600px** for covers, **1200×900px** for gallery images
 3. Optimize for web (compress without losing quality)
 4. Use descriptive file names: `masterpiece-cover.jpg`, `masterpiece-1.jpg`
+5. **See [SETUP.md](./SETUP.md) for detailed image optimization guide.**
 
 ### Step 2: Place in `public/images/`
 
@@ -296,6 +549,7 @@ cover:
 images:
   - src: "/images/masterpiece-1.jpg"
     alt: "Detailed description of this image"
+    caption: "Optional caption"
   - src: "/images/masterpiece-2.jpg"
     alt: "Another detailed description"
 ```
@@ -306,6 +560,18 @@ images:
 - **Paths start with `/`** — `src` paths are absolute from project root
 - **Stored in `public/images/`** — directory name matters
 - **File extensions matter** — `.jpg`, `.png`, `.webp`, etc.
+- **Aspect ratio** — Use consistent ratios within a mosaic (e.g., all 4:3 or all 16:9) for better layouts
+
+---
+
+## SEO & Metadata
+
+Artwork titles, descriptions, and cover images are automatically used for SEO:
+- Meta description from `description` / `descriptionPt`
+- Open Graph image from `cover.src`
+- JSON-LD VisualArtwork schema on detail pages
+
+**See [SEO.md](./SEO.md) for detailed SEO strategy and metadata guidelines.**
 
 ---
 
@@ -553,3 +819,14 @@ cat dist/sitemap-0.xml | grep artwork
 ```
 
 Should list all `/artwork/slug` pages (both PT and EN versions).
+
+---
+
+## Related Documentation
+
+- **[COMPONENTS.md](./COMPONENTS.md)** — How artworks are rendered (ArtworkCard, MosaicRow, ArtworkLayout components)
+- **[SEO.md](./SEO.md)** — SEO strategy, metadata best practices, structured data for artworks
+- **[SETUP.md](./SETUP.md)** — Image optimization, project setup, file structure
+- **[i18n.md](./i18n.md)** — Bilingual content management, language routing
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — Project structure overview
+- **[CLAUDE.md](../CLAUDE.md)** — Code conventions, stack overview, Phase 1/Phase 2 planning

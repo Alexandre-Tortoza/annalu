@@ -1,5 +1,20 @@
 # Architecture Overview
 
+## Quick Reference
+
+| Decision | Choice | Why |
+|----------|--------|-----|
+| **Site Type** | Static Site Generator (Astro) | Zero runtime JS, instant load, no server needed |
+| **Content Model** | Content Collections (Markdown + Zod) | Validates all content at build time, type-safe |
+| **Styling** | Tailwind + CSS custom properties | Tree-shaking, theme variables, small CSS output |
+| **Animations** | GSAP with reduced motion support | Smooth, performant, accessible |
+| **i18n** | File-based routing (PT default, EN prefixed) | Clean URLs, SEO-friendly, easy to maintain |
+| **Theme** | Light/dark via CSS class + localStorage | Instant switching, no flash, client-side persistence |
+| **Images** | Astro `<Image>` with automatic optimization | AVIF/WebP, srcset, lazy loading, format negotiation |
+| **Phase 2 Ready** | Schema reserves `shop?` field (optional) | Extensible without restructuring |
+
+---
+
 ## System Design
 
 AnnaLu is built on Astro's Static Site Generation (SSG) architecture. Every page is pre-rendered to static HTML at build time, with zero runtime JavaScript by default.
@@ -95,6 +110,47 @@ Static HTML output
 
 ## Component Hierarchy
 
+### Dependency Tree
+
+```
+BaseLayout.astro (all pages)
+├── Head
+│   ├── SEO.astro
+│   ├── Stylesheets
+│   └── FWOT script
+├── Header.astro
+│   ├── Logo
+│   ├── Nav
+│   ├── ThemeToggle.astro
+│   └── LanguagePicker.astro
+├── Main
+│   ├── slot (page content)
+│   └── (artworks, gallery, etc.)
+├── Footer.astro
+│   ├── Social
+│   └── Copyright
+└── script (GSAP)
+
+ArtworkLayout.astro (extends BaseLayout)
+├── (BaseLayout structure)
+├── Hero / Cover image
+├── Metadata
+└── Body
+```
+
+### Why This Design?
+
+**Monolithic Layouts Pattern:**
+- Consolidates all GSAP animation logic in one place
+- Simplifies script initialization (single `matchMedia()`)
+- Components remain template-only, UI-focused
+- Easier to maintain and debug animations
+
+**Component Boundaries:**
+- **Layout components** handle page structure (Header, Footer, SEO, animation init)
+- **Domain components** handle feature-specific UI (ArtworkCard, MosaicRow)
+- **UI components** are stateless and reusable (ThemeToggle, LanguagePicker)
+
 ### Layout Components
 
 **BaseLayout** — Top-level wrapper for all pages
@@ -135,10 +191,76 @@ ArtworkLayout (extends BaseLayout)
 - **ThemeToggle** — Theme switcher (light/dark)
 - **LanguagePicker** — Language switcher (PT/EN)
 
+**Why this separation?**
+- Each component has a single responsibility
+- Reusable across pages (Header appears on all pages)
+- Easy to test and reason about
+- Flexible for future composition
+
 ### Domain Components
 
 - **ArtworkCard** — Card displaying artwork summary (used in "latest" section)
 - **MosaicRow** — Gallery grid row for artwork display
+
+**Why domain components?**
+- Encapsulate feature-specific logic (artwork rendering, mosaic layout)
+- Coupled to content schema but reusable across pages
+- Easier to enhance (e.g., add filtering, sorting)
+
+---
+
+## Design Patterns Used
+
+### Composition Over Inheritance
+
+- **BaseLayout** contains all pages
+- **ArtworkLayout** extends BaseLayout (single inheritance level)
+- Components compose via `<slot />` rather than deep hierarchies
+- Keeps component tree shallow and testable
+
+**Benefit:** Easy to trace data flow, simple to override specific sections
+
+### Singleton Layouts
+
+- **BaseLayout** (all pages) and **ArtworkLayout** (artwork detail) are singletons
+- All GSAP initialization lives in BaseLayout `<script>`
+- Prevents duplicate script execution
+- Single source of truth for animations
+
+**Benefit:** Animations initialize once, globally, eliminating race conditions
+
+### Template-Only Components
+
+- Components like **ArtworkCard**, **MosaicRow**, **Header** have **no `<script>` block**
+- They are pure presentational—no state, no client logic
+- GSAP finds them via `data-animate` attributes from BaseLayout
+
+**Benefit:** Zero JavaScript cost at component level, animation logic centralized
+
+### Content-Driven Architecture
+
+- Content schema (Zod) is the source of truth
+- Pages are generated from content, not hardcoded
+- Component props type-checked against schema
+
+**Benefit:** Add new artwork = auto-generates pages, no code changes needed
+
+### Theme Provider Pattern
+
+- CSS custom properties define theme tokens
+- `document.documentElement.classList` toggles `.dark`
+- localStorage persists user choice
+- No context/state management needed
+
+**Benefit:** Simple, no framework overhead, works in static HTML
+
+### Bilingual Pattern
+
+- Parallel route files (`index.astro` ↔ `en/index.astro`)
+- Content fields suffixed with language code (`title` ↔ `titlePt`)
+- Helper functions map routes (`getAlternateUrl`)
+
+**Benefit:** Clear separation, type-safe, easy to add languages
 
 ---
 
@@ -513,3 +635,15 @@ Achieved through:
 - Image optimization (multiple formats, lazy loading)
 - Zero JS by default
 - Critical CSS inlined
+
+---
+
+## Related Documentation
+
+- **[COMPONENTS.md](./COMPONENTS.md)** — Component reference and prop documentation
+- **[CONTENT.md](./CONTENT.md)** — Content management and schema details
+- **[i18n.md](./i18n.md)** — Internationalization guide
+- **[GSAP.md](./GSAP.md)** — Animation implementation details
+- **[THEMING.md](./THEMING.md)** — Theme system and CSS variables
+- **[SEO.md](./SEO.md)** — Search engine optimization
+- **[CONFIG.md](./CONFIG.md)** — Configuration files reference

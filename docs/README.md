@@ -1,10 +1,12 @@
 # AnnaLu Art Gallery Documentation
 
-Welcome to the AnnaLu art gallery documentation. This folder contains comprehensive guides for developers working on this project.
+Welcome to the AnnaLu art gallery documentation. This folder contains comprehensive guides for developers, content creators, and designers working on this project.
 
-## Project Overview
+## What is AnnaLu?
 
-**AnnaLu** is a content-driven art gallery website built with Astro 6. It serves as a public gallery showcasing artworks with a modern, accessible design. The architecture is designed to evolve into an e-commerce platform (Phase 2) without requiring restructuring.
+**AnnaLu** is a modern, content-driven art gallery platform built with Astro 6. It provides a beautiful, accessible way for artists to showcase and eventually sell their work. The site emphasizes performance, SEO, and accessibility while maintaining a stunning visual experience. The architecture is thoughtfully designed to evolve into an e-commerce platform (Phase 2) without requiring restructuring.
+
+**Vision:** Create a gallery platform that prioritizes artist visibility, visitor experience, and long-term scalability.
 
 - **Phase 1 (Current):** Public gallery, presentation, and discovery.
 - **Phase 2 (Future):** E-commerce integration (price, stock, checkout, shipping).
@@ -18,6 +20,78 @@ Welcome to the AnnaLu art gallery documentation. This folder contains comprehens
 - **Performance** — Lighthouse ≥95 on all metrics
 - **Code Quality** — SOLID, DRY, KISS, YAGNI principles
 - **All code in English** — Bilingual content only
+
+---
+
+## Quick Start Path by Role
+
+Choose your path based on your role:
+
+```
+🚀 NEW DEVELOPER
+  → Start with SETUP.md (get running in 5 min)
+  → Read ARCHITECTURE.md (understand the big picture)
+  → Explore COMPONENTS.md (see what's available)
+  → Check STRUCTURE.md (navigate the codebase)
+
+📝 CONTENT CREATOR
+  → Jump to CONTENT.md (add your first artwork)
+  → Understand SEO.md (optimize visibility)
+  → Reference SETUP.md if running dev server
+
+🎨 DESIGNER / THEMER
+  → Explore THEMING.md (customize colors & fonts)
+  → Learn GSAP.md (add animations)
+  → Review COMPONENTS.md (component styling)
+  → Check CONFIG.md (Tailwind & CSS customization)
+
+⚙️ DEVOPS / DEPLOYMENT
+  → Start with CONFIG.md (all settings)
+  → Review SETUP.md deployment section
+  → Understand ARCHITECTURE.md (what gets built)
+```
+
+---
+
+## Documentation Map
+
+```
+┌─ README.md (you are here)
+│
+├─ SETUP.md ──────┬─→ Getting started
+│                 └─→ Troubleshooting
+│
+├─ ARCHITECTURE.md ──→ System design
+│                    Component flow
+│                    Data architecture
+│
+├─ STRUCTURE.md ──────→ File organization
+│                      Directory tree
+│
+├─ COMPONENTS.md ─────┬─→ Component list
+│                     ├─→ Props & interfaces
+│                     └─→ Usage examples
+│
+├─ CONTENT.md ─────────→ Adding artworks
+│                       Schema details
+│
+├─ CONFIG.md ──────────→ Astro config
+│                       Tailwind setup
+│                       Build settings
+│
+├─ THEMING.md ─────────→ Color system
+│                       Dark/light modes
+│                       CSS variables
+│
+├─ GSAP.md ────────────→ Animation patterns
+│                       Performance tips
+│
+├─ SEO.md ─────────────→ SEO implementation
+│                       Metadata strategy
+│
+└─ i18n.md ────────────→ Translations
+                        Localization
+```
 
 ---
 
@@ -88,15 +162,21 @@ The `artworks` collection stores all gallery pieces as Markdown files in `src/co
 - Image references
 - Tags and technical details
 
+**See also:** [CONTENT.md](./CONTENT.md) for adding artworks
+
 ### Pages & Routing
 - **Portuguese** — Root paths (`/`, `/galeria`, `/artwork/slug`)
 - **English** — Prefixed with `/en/` (`/en/`, `/en/gallery`, `/en/art/slug`)
+
+**See also:** [i18n.md](./i18n.md) for translation details
 
 ### Components
 Reusable, single-responsibility components:
 - **Layout components** — `BaseLayout`, `ArtworkLayout` (provide structure)
 - **UI components** — `Header`, `Footer`, `SEO`, `ThemeToggle` (reusable across pages)
 - **Domain components** — `ArtworkCard`, `MosaicRow` (specific to gallery)
+
+**See also:** [COMPONENTS.md](./COMPONENTS.md) for full component reference
 
 ### Theme System
 Dark mode via CSS class strategy:
@@ -105,30 +185,34 @@ Dark mode via CSS class strategy:
 - Persisted to `localStorage`
 - No flash of wrong theme (FWOT prevention)
 
+**See also:** [THEMING.md](./THEMING.md) for customization guide
+
 ### Internationalization
 Two locales: `pt` (Portuguese, default) and `en` (English).
 - UI strings centralized in `src/i18n/translations.ts`
 - Content fields are bilingual in the schema (`title`/`titlePt`)
 - Routing handled by Astro's built-in i18n
 
+**See also:** [i18n.md](./i18n.md) for adding new translations
+
 ---
 
 ## Common Tasks
 
 ### Adding an artwork
-See [CONTENT.md](./CONTENT.md) for step-by-step instructions.
+See [CONTENT.md](./CONTENT.md) for step-by-step instructions and schema details.
 
 ### Styling a new component
-Use Tailwind utilities and CSS custom properties. See [THEMING.md](./THEMING.md).
+Use Tailwind utilities and CSS custom properties. See [THEMING.md](./THEMING.md) for the color system and [COMPONENTS.md](./COMPONENTS.md) for styling patterns.
 
 ### Adding animations
-Use GSAP via `data-animate` attributes. See [GSAP.md](./GSAP.md).
+Use GSAP via `data-animate` attributes. See [GSAP.md](./GSAP.md) for animation patterns and best practices.
 
 ### Translating UI text
-Update `src/i18n/translations.ts`. See [i18n.md](./i18n.md).
+Update `src/i18n/translations.ts`. See [i18n.md](./i18n.md) for localization workflow.
 
 ### SEO and metadata
-Each page uses the `SEO` component. See [SEO.md](./SEO.md).
+Each page uses the `SEO` component. See [SEO.md](./SEO.md) for implementation details and JSON-LD schema.
 
 ---
 
@@ -139,6 +223,8 @@ Each page uses the `SEO` component. See [SEO.md](./SEO.md).
 - **HTML** — Static output, zero runtime overhead
 - **Accessibility** — Semantic HTML, ARIA labels, keyboard navigation, color contrast verified
 - **Theme** — Respects `prefers-color-scheme` and `prefers-reduced-motion`
+
+**See also:** [COMPONENTS.md](./COMPONENTS.md) for accessible component patterns; [GSAP.md](./GSAP.md) for animation accessibility
 
 ---
 

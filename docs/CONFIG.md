@@ -6,11 +6,40 @@ AnnaLu's behavior is controlled by configuration files in the project root. This
 
 ---
 
-## astro.config.mjs
+## Quick Reference
+
+All important settings at a glance:
+
+| Setting | File | Current Value | What It Does |
+|---------|------|----------------|-------------|
+| Site URL | `astro.config.mjs` | `https://annalu.art` | Used for canonical URLs, OG tags, sitemap |
+| Build output | `astro.config.mjs` | `static` | Generate static HTML (SSG) |
+| Default language | `astro.config.mjs` | `pt` | Portuguese at `/`, English at `/en/` |
+| TypeScript strict | `tsconfig.json` | Yes | Enforce strict type checking |
+| Import alias | `tsconfig.json` | `@/*` → `./src/*` | Shorthand imports |
+| Node version | `package.json` | ≥22.12.0 | Required Node version |
+| Tailwind version | `package.json` | v4.x | Tailwind CSS framework |
+| GSAP version | `package.json` | v3.x | Animation library |
+
+---
+
+## Astro Configuration
 
 Main Astro configuration file. Controls how the site builds and behaves.
 
-### Default Configuration
+### Configuration Options Table
+
+| Option | Current Value | Purpose | Why This Value |
+|--------|---------------|---------|-----------------|
+| `site` | `https://annalu.art` | Base URL for canonical URLs, OG tags, sitemap | Needed for SEO and social sharing |
+| `output` | `static` | Generate static HTML (SSG) | Fast, no server needed, perfect for art gallery |
+| `i18n.defaultLocale` | `pt` | Default language | PT is primary language (artist's preference) |
+| `i18n.locales` | `['pt', 'en']` | All supported languages | Portuguese + English |
+| `i18n.routing.prefixDefaultLocale` | `false` | PT at `/`, EN at `/en/` | PT users see cleaner URLs, EN at subpath |
+| `integrations` | `[sitemap()]` | Astro plugins to load | Generates `sitemap.xml` for SEO |
+| `vite.plugins` | `[tailwindcss()]` | Vite bundler plugins | Tailwind v4 integration via Vite plugin |
+
+### Default Code
 
 ```ts
 import sitemap from '@astrojs/sitemap'
@@ -127,11 +156,20 @@ export default defineConfig({
 
 ---
 
-## tsconfig.json
+## TypeScript Configuration
 
 TypeScript configuration. Controls strict type checking.
 
-### Default Configuration
+### Configuration Options Table
+
+| Option | Current Value | Purpose | Why This Value |
+|--------|---------------|---------|-----------------|
+| `extends` | `astro/tsconfigs/strict` | Extend Astro's strict TypeScript config | Strict by default prevents bugs |
+| `compilerOptions.paths["@/*"]` | `./src/*` | Path alias for cleaner imports | Can write `@/components/` instead of `../../../components/` |
+| `include` | `.astro/types.d.ts`, `**/*` | Files to type-check | Everything except dist/ |
+| `exclude` | `dist` | Files to ignore | Build output doesn't need checking |
+
+### Default Code
 
 ```json
 {
@@ -195,9 +233,42 @@ Already set by Astro's strict config.
 
 ## package.json
 
-Defines project metadata and dependencies.
+Defines project metadata, dependencies, and npm scripts.
 
-### Default Configuration
+### Configuration Options Table
+
+| Option | Current Value | Purpose |
+|--------|---------------|---------|
+| `name` | `annalu` | Project name (lowercase, no spaces) |
+| `type` | `module` | Use ES modules (modern JS) |
+| `version` | `0.0.1` | Semver version |
+| `engines.node` | `>=22.12.0` | Minimum Node.js version required |
+
+### Scripts Table
+
+| Command | Script | What It Does |
+|---------|--------|-------------|
+| `pnpm dev` | `astro dev` | Start development server (localhost:4321) |
+| `pnpm build` | `astro build` | Build for production (`dist/` folder) |
+| `pnpm preview` | `astro preview` | Preview production build locally |
+| `pnpm astro` | `astro` | Run Astro CLI directly |
+
+### Dependencies
+
+| Package | Current | Purpose |
+|---------|---------|---------|
+| `astro` | ^6.1.10 | SSG framework |
+| `gsap` | ^3.x.x | Animation library |
+| `@astrojs/sitemap` | ^1.x.x | Auto-generate sitemap.xml |
+
+### Dev Dependencies
+
+| Package | Current | Purpose |
+|---------|---------|---------|
+| `tailwindcss` | ^4.x.x | CSS utility framework |
+| `@tailwindcss/vite` | ^4.x.x | Tailwind v4 Vite plugin |
+
+### Default Code
 
 ```json
 {
@@ -224,15 +295,6 @@ Defines project metadata and dependencies.
   }
 }
 ```
-
-### Scripts
-
-| Command | Purpose |
-|---------|---------|
-| `pnpm dev` | Start development server (localhost:4321) |
-| `pnpm build` | Build for production (`dist/` folder) |
-| `pnpm preview` | Preview production build locally |
-| `pnpm astro` | Run Astro CLI directly |
 
 ### Customization
 
@@ -272,11 +334,41 @@ Updates `package.json` automatically.
 
 ---
 
-## src/styles/global.css
+## global.css
 
 Global stylesheet with Tailwind, CSS variables, and base styles.
 
-### Default Configuration
+### CSS Variables Table (Light Theme)
+
+| Variable | Value | Purpose | Used For |
+|----------|-------|---------|----------|
+| `--color-bg` | `#ffffff` | Background color | Page background |
+| `--color-surface` | `#f9f9f9` | Surface/card color | Cards, containers |
+| `--color-text` | `#1a1a1a` | Text color | Body text, headings |
+| `--color-text-muted` | `#666666` | Muted text | Secondary text, captions |
+| `--color-accent` | `#3b82f6` | Accent color | Links, buttons, highlights |
+| `--color-accent-hover` | `#2563eb` | Accent hover state | Hovered links/buttons |
+| `--color-border` | `#e5e5e5` | Border color | Lines, dividers |
+| `--font-sans` | System fonts | Main font | Body text, paragraphs |
+| `--font-display` | Georgia, serif | Display font | Headings, titles |
+
+### Dark Theme Variables
+
+Same variables in `.dark` class with inverted colors:
+
+```css
+.dark {
+  --color-bg: #1a1a1a;        /* Dark background */
+  --color-surface: #2a2a2a;   /* Dark surface */
+  --color-text: #f5f5f5;      /* Light text */
+  --color-text-muted: #999999;
+  --color-accent: #60a5fa;    /* Lighter blue */
+  --color-accent-hover: #93c5fd;
+  --color-border: #404040;    /* Dark border */
+}
+```
+
+### Default Code
 
 ```css
 /* Tailwind v4 import */
@@ -694,25 +786,53 @@ Runs TypeScript check without building.
 
 ---
 
-## Configuration Checklist
+## Configuration Validation Checklist
 
-Before deploying:
+Before deploying, verify all configuration settings:
 
-- [ ] `site` URL set to production domain in `astro.config.mjs`
-- [ ] Node version in `package.json` matches hosting requirement
-- [ ] All environment variables documented
+### Astro Config (`astro.config.mjs`)
+- [ ] `site` is set to production domain (not localhost)
+- [ ] `output` is `'static'` (or `'hybrid'` if using dynamic routes)
+- [ ] `defaultLocale` matches your primary language
+- [ ] All integrations are imported and listed
+- [ ] No syntax errors (run `pnpm astro check`)
+
+### TypeScript Config (`tsconfig.json`)
+- [ ] Extends `astro/tsconfigs/strict` for type safety
+- [ ] Path aliases defined for convenience
+- [ ] No circular imports in path aliases
+- [ ] All files can be compiled (run `pnpm astro check`)
+
+### Package.json
+- [ ] Node version requirement matches your hosting (run `node --version`)
+- [ ] All scripts are correct and tested
+- [ ] No private packages required without credentials
+- [ ] All dependencies have compatible versions (check `pnpm-lock.yaml`)
+
+### CSS Config (`src/styles/global.css`)
+- [ ] Tailwind v4 import at top
+- [ ] Both light and dark theme colors defined
+- [ ] Dark variant registered with `@custom-variant`
+- [ ] No undefined CSS variables
+
+### Environment Variables (`.env.local`)
+- [ ] `.env.local` is in `.gitignore` (secrets not committed)
 - [ ] `PUBLIC_*` variables are not secrets
-- [ ] `SECRET_*` variables are not in code
-- [ ] CSS variables defined for both light and dark themes
-- [ ] Content schema validates all required fields
-- [ ] Images service configured correctly
+- [ ] All `SECRET_*` variables are actually secrets
+- [ ] No hardcoded API keys in source files
+
+### Content Schema (`src/content.config.ts`)
+- [ ] All required fields are non-optional
+- [ ] `alt` fields present on images
+- [ ] Schema validates correctly (run `pnpm astro check`)
+- [ ] No typos in field names
 
 ---
 
 ## Common Configuration Questions
 
 **Q: How do I change the site name?**
-A: The site name "AnnaLu" is in `translations.ts` and hardcoded in components. Update everywhere or use a global constant (Phase 2+).
+A: The site name "AnnaLu" is in `translations.ts` and hardcoded in components. Update everywhere or create a global constant (Phase 2+).
 
 **Q: How do I add a favicon?**
 A: Replace `public/favicon.ico` and `public/favicon.svg`. Links in `BaseLayout` automatically find them.
@@ -726,11 +846,24 @@ A: Add `PUBLIC_GA_ID` to `.env.local`, then add tracking script to `BaseLayout` 
 **Q: How do I enable PHP or backend?**
 A: Change `output: 'hybrid'` in `astro.config.mjs` to enable on-demand rendering for API endpoints (Phase 2+).
 
+**Q: How do I change the development server port?**
+A: Run `pnpm dev --port 3000` (see `astro dev --help` for all options).
+
+**Q: How do I optimize build size?**
+A: Astro automatically tree-shakes unused CSS. For JS, ensure no components have client-side scripts unnecessarily.
+
+**Q: How do I add authentication?**
+A: Currently not supported (Phase 1 is static). Phase 2+ with `output: 'hybrid'` will support auth middleware.
+
 ---
 
-## Resources
+## Resources & Related Documentation
 
-- [Astro Configuration](https://docs.astro.build/en/reference/configuration-reference/)
+- [THEMING.md](./THEMING.md) — Detailed theming guide, color tokens, light/dark mode
+- [i18n.md](./i18n.md) — Internationalization setup, locale configuration
+- [SETUP.md](./SETUP.md) — Initial project setup, installation
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — Project structure, folder layout
+- [Astro Configuration Reference](https://docs.astro.build/en/reference/configuration-reference/)
 - [TypeScript Compiler Options](https://www.typescriptlang.org/tsconfig)
 - [Tailwind Configuration](https://tailwindcss.com/docs/configuration)
 - [Environment Variables](https://docs.astro.build/en/guides/environment-variables/)
