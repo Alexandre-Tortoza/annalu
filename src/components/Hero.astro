@@ -1,0 +1,155 @@
+---
+import type { Lang } from "@/i18n";
+import { useTranslations, getLocalizedPath } from "@/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const navLinks = [
+  { label: t("nav.home"), href: getLocalizedPath("/", lang) },
+  { label: t("nav.gallery"), href: getLocalizedPath("/galeria", lang) },
+];
+---
+
+<section class="h-screen p-3 sm:p-4" data-animate="hero">
+  <div
+    class="gsap-target relative flex h-full items-center justify-center overflow-hidden rounded-2xl
+           border border-[var(--color-border)]"
+  >
+    <!-- Background gradient behind waves -->
+    <div class="hero-bg-gradient absolute inset-0" aria-hidden="true"></div>
+
+    <!-- Animated ocean SVG background with blur -->
+    <div class="absolute -inset-x-12 inset-y-0 blur-[20px] saturate-150" aria-hidden="true" data-animate="hero-ocean">
+      <svg
+        class="absolute inset-0 h-full w-full"
+        viewBox="0 0 1440 900"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <!-- Wave gradients — top-to-bottom for darker crests -->
+          <linearGradient id="ocean-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.8" />
+            <stop offset="40%" stop-color="#2D6673" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="#419FD9" stop-opacity="0.3" />
+          </linearGradient>
+          <linearGradient id="ocean-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#163E5C" stop-opacity="0.7" />
+            <stop offset="40%" stop-color="#23648C" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="#377D8C" stop-opacity="0.25" />
+          </linearGradient>
+          <linearGradient id="ocean-grad-3" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#04707D" stop-opacity="0.7" />
+            <stop offset="40%" stop-color="#06b6d4" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="#419FD9" stop-opacity="0.3" />
+          </linearGradient>
+          <!-- Blend gradient — ocean blue fading into bg color -->
+          <linearGradient id="ocean-grad-blend" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2D6673" stop-opacity="0" />
+            <stop offset="30%" stop-color="#2D6673" stop-opacity="0.15" />
+            <stop offset="60%" stop-color="#1a8a9e" stop-opacity="0.3" />
+            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.45" />
+          </linearGradient>
+        </defs>
+
+        <!-- Blend wave — soft transition between bg and ocean -->
+        <path
+          fill="url(#ocean-grad-blend)"
+          class="hero-wave"
+          data-wave="blend"
+          data-parallax-speed="0.4"
+          data-wavelength="400"
+          d="M-800,300 C-680,250 -560,350 -400,300 C-280,250 -160,350 0,300 C120,250 240,350 400,300 C520,250 640,350 800,300 C920,250 1040,350 1200,300 C1320,250 1440,350 1600,300 C1720,250 1840,350 2000,300 C2120,250 2240,350 2400,300 L2400,900 L-800,900 Z"
+        />
+
+        <!-- Wave layer 1 — slow, large swell (wavelength 360, travels right-to-left) -->
+        <path
+          fill="url(#ocean-grad-1)"
+          class="hero-wave"
+          data-wave="1"
+          data-parallax-speed="0.8"
+          data-wavelength="360"
+          d="M-720,400 C-630,300 -540,500 -360,400 C-270,300 -180,500 0,400 C90,300 180,500 360,400 C450,300 540,500 720,400 C810,300 900,500 1080,400 C1170,300 1260,500 1440,400 C1530,300 1620,500 1800,400 C1890,300 1980,500 2160,400 L2160,900 L-720,900 Z"
+        />
+
+        <!-- Wave layer 2 — medium chop (wavelength 480, medium speed) -->
+        <path
+          fill="url(#ocean-grad-2)"
+          class="hero-wave"
+          data-wave="2"
+          data-parallax-speed="2"
+          data-wavelength="480"
+          d="M-960,500 C-840,420 -720,580 -480,500 C-360,420 -240,580 0,500 C120,420 240,580 480,500 C600,420 720,580 960,500 C1080,420 1200,580 1440,500 C1560,420 1680,580 1920,500 C2040,420 2160,580 2400,500 L2400,900 L-960,900 Z"
+        />
+
+        <!-- Wave layer 3 — fast foreground ripple (wavelength 320, fastest) -->
+        <path
+          fill="url(#ocean-grad-3)"
+          class="hero-wave"
+          data-wave="3"
+          data-parallax-speed="1"
+          data-wavelength="320"
+          d="M-640,600 C-560,550 -480,650 -320,600 C-240,550 -160,650 0,600 C80,550 160,650 320,600 C400,550 480,650 640,600 C720,550 800,650 960,600 C1040,550 1120,650 1280,600 C1360,550 1440,650 1600,600 C1680,550 1760,650 1920,600 C2000,550 2080,650 2240,600 L2240,900 L-640,900 Z"
+        />
+
+      </svg>
+    </div>
+
+    <!-- Content overlay -->
+    <div class="absolute inset-0 z-10 flex flex-col items-center px-6 pt-[05%] text-center">
+      <h1
+        class="text-4xl font-bold tracking-tight text-[var(--color-text)] sm:text-5xl md:text-6xl lg:text-7xl font-serif"
+      >
+        {t("hero.title")}
+      </h1>
+      <nav class="mt-8 flex items-center gap-3 font-serif text-lg font-bold" aria-label="Hero navigation">
+        {navLinks.map(({ label, href }, i) => (
+          <>
+            {i > 0 && (
+              <span class="text-[var(--color-text-muted)] select-none" aria-hidden="true">&middot;</span>
+            )}
+            <a
+              href={href}
+              class="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
+            >
+              {label}
+            </a>
+          </>
+        ))}
+      </nav>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-wave {
+    will-change: transform;
+  }
+
+  .hero-bg-gradient {
+    background: linear-gradient(
+      to bottom,
+      #e8dece 0%,
+      #e8dfc4 25%,
+      #f2ead5 50%,
+      #faf5e6 75%,
+      #ffffef 100%
+    );
+  }
+
+  :global(.dark) .hero-bg-gradient {
+    background: linear-gradient(
+      to bottom,
+      #050505 0%,
+      #070707 25%,
+      #090909 50%,
+      #0a0a0a 75%,
+      #0a0a0a 100%
+    );
+  }
+</style>
