@@ -17,9 +17,10 @@ interface Props {
   seo: SeoProps;
   lang: Lang;
   alternateUrl: string;
+  isLanding?: boolean;
 }
 
-const { seo, lang, alternateUrl } = Astro.props;
+const { seo, lang, alternateUrl, isLanding = false } = Astro.props;
 const currentPath = Astro.url.pathname;
 const htmlLang = lang === "pt" ? "pt-BR" : "en";
 ---
@@ -55,7 +56,7 @@ const htmlLang = lang === "pt" ? "pt-BR" : "en";
     <SEO {...seo} lang={lang} />
   </head>
   <body class="min-h-screen flex flex-col">
-    <Header lang={lang} currentPath={currentPath} alternateUrl={alternateUrl} />
+    <Header lang={lang} currentPath={currentPath} alternateUrl={alternateUrl} isLanding={isLanding} />
 
     <main class="flex-1">
       <slot />
@@ -80,6 +81,192 @@ const htmlLang = lang === "pt" ? "pt-BR" : "en";
             { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
           );
         });
+
+        // Landing header — hidden until scroll threshold, then slides in
+        const HEADER_SCROLL_THRESHOLD = 300;
+        const landingHeader = document.querySelector<HTMLElement>("[data-landing-header]");
+        if (landingHeader) {
+          ScrollTrigger.create({
+            start: HEADER_SCROLL_THRESHOLD,
+            onEnter: () => {
+              gsap.to(landingHeader, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "power2.out",
+                onStart: () => {
+                  landingHeader.style.pointerEvents = "auto";
+                },
+              });
+            },
+            onLeaveBack: () => {
+              gsap.to(landingHeader, {
+                opacity: 0,
+                y: "-100%",
+                duration: 0.4,
+                ease: "power2.in",
+                onComplete: () => {
+                  landingHeader.style.pointerEvents = "none";
+                },
+              });
+            },
+          });
+        }
+
+        // Hero waves — GSAP parallax + organic motion + mouse interaction
+        const heroSection = document.querySelector<HTMLElement>("[data-animate='hero']");
+        const oceanContainer = document.querySelector<HTMLElement>("[data-animate='hero-ocean']");
+
+        if (heroSection && oceanContainer) {
+          const waves = oceanContainer.querySelectorAll<SVGPathElement>(".hero-wave");
+
+          // ── Speed multiplier (increase to speed up all waves, decrease to slow) ──
+          const SPEED_MULTIPLIER = 2;
+
+          // Traveling wave — continuous horizontal scroll per layer
+          // Base durations in seconds (before multiplier): blend=22, wave1=18, wave2=12, wave3=8
+          const baseWaveSpeeds = [22, 18, 12, 8];
+          waves.forEach((wave, i) => {
+            const wavelength = parseFloat(wave.dataset.wavelength || "360");
+            gsap.to(wave, {
+              x: -wavelength,
+              duration: (baseWaveSpeeds[i] || 12) / SPEED_MULTIPLIER,
+              ease: "none",
+              repeat: -1,
+            });
+          });
+
+          // Gentle vertical bob — each layer sways independently
+          const baseBobConfigs = [
+            { amount: 8, dur: 6 },
+            { amount: 12, dur: 5 },
+            { amount: 18, dur: 4.2 },
+            { amount: 24, dur: 3.4 },
+          ];
+          waves.forEach((wave, i) => {
+            const cfg = baseBobConfigs[i] || { amount: 15, dur: 4 };
+            gsap.to(wave, {
+              y: cfg.amount,
+              duration: cfg.dur / SPEED_MULTIPLIER,
+              ease: "sine.inOut",
+              repeat: -1,
+              yoyo: true,
+              delay: i * 0.4,
+            });
+          });
+
+          // Scroll parallax — each wave moves at its own rate
+          waves.forEach((wave) => {
+            const speed = parseFloat(wave.dataset.parallaxSpeed || "0.5");
+            gsap.to(wave, {
+              yPercent: speed * 30,
+              ease: "none",
+              scrollTrigger: {
+                trigger: heroSection,
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+              },
+            });
+          });
+
+          // Mouse interaction — pull entire ocean toward cursor
+          const oceanX = gsap.quickTo(oceanContainer, "x", { duration: 1, ease: "power3.out" });
+          const oceanY = gsap.quickTo(oceanContainer, "y", { duration: 1, ease: "power3.out" });
+
+          const heroContainer = heroSection.querySelector<HTMLElement>(".gsap-target");
+          if (heroContainer) {
+            heroContainer.addEventListener("mousemove", (e) => {
+              const rect = heroContainer.getBoundingClientRect();
+              const xNorm = (e.clientX - rect.left) / rect.width - 0.5;
+              const yNorm = (e.clientY - rect.top) / rect.height - 0.5;
+
+              oceanX(xNorm * 30);
+              oceanY(yNorm * 15);
+            });
+
+            heroContainer.addEventListener("mouseleave", () => {
+              oceanX(0);
+              oceanY(0);
+            });
+          }
+        }
+
+        // Editorial stack — text from left, images from right, cards pile on scroll
+        const editorialStack = document.querySelector<HTMLElement>("[data-animate='editorial-stack']");
+        if (editorialStack) {
+          const editorialText = document.querySelector<HTMLElement>("[data-animate='editorial-text']");
+          if (editorialText) {
+            gsap.fromTo(
+              editorialText,
+              { opacity: 0, x: -60 },
+              {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: { trigger: editorialText, start: "top 80%" },
+              },
+            );
+          }
+
+          gsap.fromTo(
+            editorialStack,
+            { opacity: 0, x: 60 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              scrollTrigger: { trigger: editorialStack, start: "top 80%" },
+            },
+          );
+
+          const stackCards = gsap.utils.toArray<HTMLElement>(".editorial-card");
+          if (stackCards.length > 0) {
+            const rotations = [-2, 3, -1.5];
+            const stackOffsets = [
+              { x: 0, y: 0 },
+              { x: 8, y: -6 },
+              { x: -6, y: 4 },
+            ];
+
+            gsap.set(stackCards[0], {
+              rotation: rotations[0],
+              x: stackOffsets[0].x,
+              y: stackOffsets[0].y,
+            });
+
+            stackCards.slice(1).forEach((card) => {
+              gsap.set(card, { opacity: 0, y: 80, scale: 0.9, rotation: 10 });
+            });
+
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: editorialStack,
+                start: "top 60%",
+                end: `+=${stackCards.length * 180}`,
+                scrub: 2,
+              },
+            });
+
+            stackCards.slice(1).forEach((card, i) => {
+              tl.to(
+                card,
+                {
+                  opacity: 1,
+                  y: stackOffsets[i + 1]?.y ?? 0,
+                  x: stackOffsets[i + 1]?.x ?? 0,
+                  scale: 1,
+                  rotation: rotations[i + 1] ?? 0,
+                  duration: 1,
+                  ease: "back.out(1.2)",
+                },
+                i * 0.3,
+              );
+            });
+          }
+        }
 
         // Card stagger reveal
         const cards = gsap.utils.toArray<HTMLElement>("[data-animate='card']");
