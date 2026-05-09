@@ -11,27 +11,39 @@
 }
 
 :root {
-  --color-bg: #ffffef;
-  --color-surface: #ffffef;
-  --color-surface-hover: #f5f5f5;
-  --color-text: #3b3b37;
-  --color-text-muted: #6b7280;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-light: #eff6ff;
-  --color-border: #e5e7eb;
+  /* Light — "Areia Quente": warm parchment/sand tones, ocean-teal accent */
+  --color-bg: #f3ebe0;
+  --color-surface: #ece0d0;
+  --color-surface-hover: #e2d2bc;
+  --color-text: #281e14;
+  --color-text-muted: #7a6455;
+  --color-accent: #1b7b8c;
+  --color-accent-hover: #145f6d;
+  --color-accent-light: #d8f1f5;
+  --color-border: #cfc0ac;
+  --color-about-bg: #d8f1f5;
+  --color-footer-bg: #23648c;
+  --color-footer-border: #1a526f;
+  --color-footer-text: #f0fbfd;
+  --color-footer-text-muted: #d0eef5;
 }
 
 .dark {
-  --color-bg: #0a0a0a;
-  --color-surface: #171717;
-  --color-surface-hover: #262626;
-  --color-text: #f5f5f5;
-  --color-text-muted: #a3a3a3;
-  --color-accent: #60a5fa;
-  --color-accent-hover: #93c5fd;
-  --color-accent-light: #1e3a5f;
-  --color-border: #404040;
+  /* Dark — "Oceano Noturno": deep warm dark, cream text, bright teal accent */
+  --color-bg: #111210;
+  --color-surface: #1b1a17;
+  --color-surface-hover: #252420;
+  --color-text: #ede5d5;
+  --color-text-muted: #9a8e7e;
+  --color-accent: #3bbdce;
+  --color-accent-hover: #5ed0e0;
+  --color-accent-light: #0d2630;
+  --color-border: #312d28;
+  --color-about-bg: #0d2630;
+  --color-footer-bg: #071922;
+  --color-footer-border: #12313d;
+  --color-footer-text: #e4f8fb;
+  --color-footer-text-muted: #9fd9e4;
 }
 
 *,
@@ -51,4 +63,82 @@ body {
 
 .gsap-target {
   will-change: transform, opacity;
+}
+
+.about-section {
+  --color-text: var(--color-footer-text);
+  --color-text-muted: var(--color-footer-text-muted);
+  background:
+    linear-gradient(180deg, #1a8a9e 0%, #23648c 100%),
+    var(--color-about-bg);
+  clip-path: polygon(
+    0 2rem,
+    8% 1.45rem,
+    16% 2rem,
+    24% 2.55rem,
+    32% 2rem,
+    40% 1.45rem,
+    48% 2rem,
+    56% 2.55rem,
+    64% 2rem,
+    72% 1.45rem,
+    80% 2rem,
+    88% 2.55rem,
+    100% 2rem,
+    100% 100%,
+    0 100%
+  );
+}
+
+/* ── Cursor FX ─────────────────────────────────────────── */
+#cursor-fx {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (hover: none) {
+  #cursor-fx { display: none; }
+}
+
+@media (hover: hover) {
+  *, *::before, *::after { cursor: none !important; }
+}
+
+#cursor-sun {
+  color: #E8A920;
+  display: block;
+  animation: cursor-sun-spin 12s linear infinite;
+}
+
+.dark #cursor-sun {
+  display: none;
+}
+
+#cursor-moon {
+  color: #7ECFE0;
+  display: none;
+  animation: cursor-moon-spin 18s linear infinite;
+}
+
+.dark #cursor-moon {
+  display: block;
+}
+
+@keyframes cursor-sun-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cursor-moon-spin {
+  to { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cursor-sun,
+  #cursor-moon {
+    animation: none;
+  }
 }

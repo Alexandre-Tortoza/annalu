@@ -1,0 +1,35 @@
+---
+import type { Lang } from "@/i18n";
+import { useTranslations } from "@/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="about-section px-4 pt-64 pb-32 sm:px-6">
+  <div class="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 md:items-center">
+    <div class="overflow-hidden rounded-xl">
+      <img
+        src="/images/author-photo.jpg"
+        alt="Portrait of the artist"
+        width="500"
+        height="600"
+        loading="lazy"
+        decoding="async"
+        class="w-full object-cover"
+      />
+    </div>
+    <div>
+      <h2 class="text-2xl font-bold text-[var(--color-text)] sm:text-3xl font-serif">
+        {t("section.about")}
+      </h2>
+      <p class="mt-4 text-[var(--color-text-muted)] leading-relaxed">
+        {t("section.about.text")}
+      </p>
+    </div>
+  </div>
+</section>

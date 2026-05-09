@@ -36,22 +36,30 @@ function isActive(href: string): boolean {
   ]}
   data-landing-header={isLanding ? "" : undefined}
 >
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-2 sm:px-6 sm:py-3 lg:px-8">
     <a
       href={getLocalizedPath("/", lang)}
-      class="text-xl font-bold tracking-tight font-serif
-             text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+      class="block shrink-0 transition-opacity hover:opacity-80"
+      aria-label={t("nav.home")}
     >
-      AnnaLu
+      <img
+        src="/logo.png"
+        alt="Annalu"
+        width="280"
+        height="80"
+        class="relative top-[3px] -rotate-20 h-12 w-auto sm:h-14 md:h-16 lg:h-20 xl:h-24"
+        loading="eager"
+        decoding="async"
+      />
     </a>
 
     <!-- Desktop nav -->
-    <nav class="hidden items-center gap-6 sm:flex" aria-label="Main navigation">
+    <nav class="hidden items-center gap-4 md:flex lg:gap-6" aria-label="Main navigation">
       {navLinks.map(({ label, href }) => (
         <a
           href={href}
           class:list={[
-            "font-serif text-sm transition-colors",
+            "font-serif text-sm transition-colors lg:text-base",
             isActive(href)
               ? "font-semibold text-[var(--color-accent)]"
               : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
@@ -63,21 +71,22 @@ function isActive(href: string): boolean {
       ))}
     </nav>
 
-    <div class="hidden items-center gap-2 sm:flex">
+    <div class="hidden items-center gap-1.5 md:flex lg:gap-2">
       <LanguagePicker lang={lang} alternateUrl={alternateUrl} />
       <ThemeToggle lang={lang} />
     </div>
 
     <!-- Mobile menu -->
-    <details class="group sm:hidden">
+    <details class="group md:hidden">
       <summary
-        class="inline-flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg cursor-pointer
+               sm:h-10 sm:w-10
                hover:bg-[var(--color-surface-hover)] list-none
-               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+                focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
         aria-label={t("aria.openMenu")}
       >
         <svg
-          class="w-5 h-5 group-open:hidden"
+          class="h-5 w-5 group-open:hidden"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -88,7 +97,7 @@ function isActive(href: string): boolean {
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
         <svg
-          class="hidden w-5 h-5 group-open:block"
+          class="hidden h-5 w-5 group-open:block"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -101,7 +110,7 @@ function isActive(href: string): boolean {
       </summary>
       <nav
         class="absolute left-0 right-0 top-full border-b border-[var(--color-border)]
-               bg-[var(--color-surface)] px-4 py-4"
+               bg-[var(--color-surface)] px-4 py-4 sm:px-6"
         aria-label="Mobile navigation"
       >
         <div class="flex flex-col gap-4">
@@ -109,7 +118,7 @@ function isActive(href: string): boolean {
             <a
               href={href}
               class:list={[
-                "font-serif text-sm transition-colors",
+                "font-serif text-base transition-colors",
                 isActive(href)
                   ? "font-semibold text-[var(--color-accent)]"
                   : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",

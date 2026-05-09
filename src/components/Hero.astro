@@ -64,7 +64,15 @@ const navLinks = [
           data-wave="blend"
           data-parallax-speed="0.4"
           data-wavelength="400"
-          d="M-800,300 C-680,250 -560,350 -400,300 C-280,250 -160,350 0,300 C120,250 240,350 400,300 C520,250 640,350 800,300 C920,250 1040,350 1200,300 C1320,250 1440,350 1600,300 C1720,250 1840,350 2000,300 C2120,250 2240,350 2400,300 L2400,900 L-800,900 Z"
+          d="M-800,240
+             C-768,195 -748,285 -600,265 C-452,245 -428,198 -400,240
+             C-368,212 -348,272 -200,218 C-52,185 -28,228 0,240
+             C32,250 55,285 200,270 C345,255 372,215 400,240
+             C432,268 455,215 600,215 C745,215 768,250 800,240
+             C832,230 856,282 1000,272 C1145,262 1168,215 1200,240
+             C1232,268 1255,205 1400,210 C1545,215 1568,250 1600,240
+             C1632,228 1655,278 1800,265 C1945,252 1968,215 2000,240
+             L2000,900 L-800,900 Z"
         />
 
         <!-- Wave layer 1 — slow, large swell (wavelength 360, travels right-to-left) -->
@@ -74,7 +82,16 @@ const navLinks = [
           data-wave="1"
           data-parallax-speed="0.8"
           data-wavelength="360"
-          d="M-720,400 C-630,300 -540,500 -360,400 C-270,300 -180,500 0,400 C90,300 180,500 360,400 C450,300 540,500 720,400 C810,300 900,500 1080,400 C1170,300 1260,500 1440,400 C1530,300 1620,500 1800,400 C1890,300 1980,500 2160,400 L2160,900 L-720,900 Z"
+          d="M-720,400
+             C-688,338 -662,490 -540,455 C-418,420 -390,342 -360,400
+             C-328,430 -302,348 -180,322 C-58,312 -28,382 0,400
+             C32,418 55,488 180,472 C305,456 338,332 360,400
+             C395,325 418,445 540,335 C662,345 692,388 720,400
+             C755,415 778,495 900,478 C1022,461 1052,325 1080,400
+             C1115,320 1140,445 1260,318 C1380,310 1412,388 1440,400
+             C1478,412 1502,475 1620,462 C1742,449 1772,328 1800,400
+             C1835,345 1858,468 1980,352 C2102,338 2135,390 2160,400
+             L2160,900 L-720,900 Z"
         />
 
         <!-- Wave layer 2 — medium chop (wavelength 480, medium speed) -->
@@ -84,7 +101,15 @@ const navLinks = [
           data-wave="2"
           data-parallax-speed="2"
           data-wavelength="480"
-          d="M-960,500 C-840,420 -720,580 -480,500 C-360,420 -240,580 0,500 C120,420 240,580 480,500 C600,420 720,580 960,500 C1080,420 1200,580 1440,500 C1560,420 1680,580 1920,500 C2040,420 2160,580 2400,500 L2400,900 L-960,900 Z"
+          d="M-960,510
+             C-925,462 -898,565 -720,558 C-542,551 -512,462 -480,510
+             C-448,478 -418,552 -240,468 C-62,418 -28,498 0,510
+             C38,522 62,558 240,548 C418,538 452,468 480,510
+             C518,478 545,555 720,472 C895,422 928,498 960,510
+             C998,522 1022,572 1200,562 C1378,552 1412,462 1440,510
+             C1478,475 1502,558 1680,468 C1858,415 1892,498 1920,510
+             C1958,522 1982,558 2160,548 C2338,538 2372,468 2400,510
+             L2400,900 L-960,900 Z"
         />
 
         <!-- Wave layer 3 — fast foreground ripple (wavelength 320, fastest) -->
@@ -94,11 +119,45 @@ const navLinks = [
           data-wave="3"
           data-parallax-speed="1"
           data-wavelength="320"
-          d="M-640,600 C-560,550 -480,650 -320,600 C-240,550 -160,650 0,600 C80,550 160,650 320,600 C400,550 480,650 640,600 C720,550 800,650 960,600 C1040,550 1120,650 1280,600 C1360,550 1440,650 1600,600 C1680,550 1760,650 1920,600 C2000,550 2080,650 2240,600 L2240,900 L-640,900 Z"
+          d="M-640,610
+             C-614,582 -598,648 -480,645 C-362,642 -346,578 -320,610
+             C-295,582 -278,642 -160,578 C-42,538 -18,598 0,610
+             C28,622 45,652 160,642 C275,632 298,575 320,610
+             C348,580 365,648 480,580 C595,548 618,598 640,610
+             C668,622 688,658 800,648 C912,638 938,572 960,610
+             C988,582 1005,645 1120,578 C1235,548 1258,598 1280,610
+             C1308,622 1328,658 1440,645 C1552,632 1575,572 1600,610
+             C1628,580 1645,655 1760,582 C1875,548 1898,598 1920,610
+             C1948,622 1968,655 2080,645 C2192,635 2218,572 2240,610
+             C2268,582 2285,648 2400,580 C2515,548 2540,600 2560,610
+             L2560,900 L-640,900 Z"
         />
 
       </svg>
     </div>
+
+    <!-- Footprints on sand (animated via GSAP in BaseLayout) -->
+    <svg
+      class="absolute inset-0 h-full w-full z-[5] pointer-events-none"
+      viewBox="0 0 1440 900"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <!-- Person 1 — walking toward the water (left side) -->
+      <ellipse class="hero-footprint" cx="608" cy="72"  rx="6" ry="10" transform="rotate(-10 608 72)"  />
+      <ellipse class="hero-footprint" cx="632" cy="106" rx="6" ry="10" transform="rotate(10 632 106)"  />
+      <ellipse class="hero-footprint" cx="606" cy="140" rx="6" ry="10" transform="rotate(-12 606 140)" />
+      <ellipse class="hero-footprint" cx="634" cy="174" rx="6" ry="10" transform="rotate(8 634 174)"   />
+      <ellipse class="hero-footprint" cx="609" cy="208" rx="6" ry="10" transform="rotate(-10 609 208)" />
+      <ellipse class="hero-footprint" cx="631" cy="242" rx="6" ry="10" transform="rotate(10 631 242)"  />
+
+      <!-- Person 2 — walking toward the water (right side, slightly behind) -->
+      <ellipse class="hero-footprint" cx="832" cy="88"  rx="6" ry="10" transform="rotate(12 832 88)"   />
+      <ellipse class="hero-footprint" cx="808" cy="122" rx="6" ry="10" transform="rotate(-9 808 122)"  />
+      <ellipse class="hero-footprint" cx="834" cy="156" rx="6" ry="10" transform="rotate(11 834 156)"  />
+      <ellipse class="hero-footprint" cx="806" cy="190" rx="6" ry="10" transform="rotate(-10 806 190)" />
+      <ellipse class="hero-footprint" cx="833" cy="224" rx="6" ry="10" transform="rotate(10 833 224)"  />
+    </svg>
 
     <!-- Content overlay -->
     <div class="absolute inset-0 z-10 flex flex-col items-center px-6 pt-[05%] text-center">
@@ -131,25 +190,33 @@ const navLinks = [
     will-change: transform;
   }
 
+  .hero-footprint {
+    fill: rgba(120, 88, 52, 0.5);
+  }
+
+  :global(.dark) .hero-footprint {
+    fill: rgba(48, 40, 30, 0.7);
+  }
+
   .hero-bg-gradient {
     background: linear-gradient(
       to bottom,
-      #e8dece 0%,
-      #e8dfc4 25%,
-      #f2ead5 50%,
-      #faf5e6 75%,
-      #ffffef 100%
+      #cbb89e 0%,
+      #d4c2a8 20%,
+      #dccdb5 45%,
+      #e5d9c6 70%,
+      #ece0d0 100%
     );
   }
 
   :global(.dark) .hero-bg-gradient {
     background: linear-gradient(
       to bottom,
-      #050505 0%,
-      #070707 25%,
-      #090909 50%,
-      #0a0a0a 75%,
-      #0a0a0a 100%
+      #0a0c0e 0%,
+      #0c0e0e 30%,
+      #0e1010 60%,
+      #101110 80%,
+      #111210 100%
     );
   }
 </style>

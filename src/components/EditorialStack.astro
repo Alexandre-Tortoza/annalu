@@ -11,11 +11,11 @@ interface Props {
 
 const { artworks, lang } = Astro.props;
 const t = useTranslations(lang);
-const covers = sortByDate(artworks).slice(0, 3);
+const covers = sortByDate(artworks).slice(0, 5);
 ---
 
-<section class="mx-auto max-w-6xl px-4 pt-48 pb-48 sm:px-6">
-  <div class="grid gap-16 md:grid-cols-2 md:items-center">
+<section class="mx-auto mt-32 mb-32 max-w-6xl px-4 py-64 sm:px-6 md:mt-48 md:mb-48" data-animate="editorial-section">
+  <div class="editorial-pin grid gap-16 md:grid-cols-2 md:items-center" data-animate="editorial-pin">
     <blockquote class="text-2xl font-light italic text-[var(--color-text)] leading-relaxed font-serif" data-animate="editorial-text">
       &ldquo;{t("editorial.quote")}&rdquo;
     </blockquote>
@@ -28,8 +28,9 @@ const covers = sortByDate(artworks).slice(0, 3);
           height="450"
           loading="lazy"
           decoding="async"
-          class="editorial-card absolute inset-0 h-full w-full rounded-xl object-cover shadow-lg"
+          class={`editorial-card absolute inset-0 h-full w-full rounded-xl object-cover shadow-lg ${i === 0 ? "" : "opacity-0"}`}
           data-stack-i={i}
+          style={`z-index: ${i + 1}`}
         />
       ))}
     </div>
