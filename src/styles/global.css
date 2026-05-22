@@ -22,6 +22,8 @@
   --color-accent-light: #d8f1f5;
   --color-border: #cfc0ac;
   --color-about-bg: #d8f1f5;
+  --color-about-from: #1a8a9e;
+  --color-about-to: #23648c;
   --color-footer-bg: #23648c;
   --color-footer-border: #1a526f;
   --color-footer-text: #f0fbfd;
@@ -40,6 +42,8 @@
   --color-accent-light: #0d2630;
   --color-border: #312d28;
   --color-about-bg: #0d2630;
+  --color-about-from: #103e4a;
+  --color-about-to: #0a2536;
   --color-footer-bg: #071922;
   --color-footer-border: #12313d;
   --color-footer-text: #e4f8fb;
@@ -68,26 +72,19 @@ body {
 .about-section {
   --color-text: var(--color-footer-text);
   --color-text-muted: var(--color-footer-text-muted);
+  --wave-height: 2.55rem;
+  --wave-svg: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 100' preserveAspectRatio='none'><path d='M0,50 Q100,40 200,50 T400,50 T600,50 T800,50 T1000,50 T1200,50 L1200,100 L0,100 Z' fill='black'/></svg>");
   background:
-    linear-gradient(180deg, #1a8a9e 0%, #23648c 100%),
+    linear-gradient(180deg, var(--color-about-from) 0%, var(--color-about-to) 100%),
     var(--color-about-bg);
-  clip-path: polygon(
-    0 2rem,
-    8% 1.45rem,
-    16% 2rem,
-    24% 2.55rem,
-    32% 2rem,
-    40% 1.45rem,
-    48% 2rem,
-    56% 2.55rem,
-    64% 2rem,
-    72% 1.45rem,
-    80% 2rem,
-    88% 2.55rem,
-    100% 2rem,
-    100% 100%,
-    0 100%
-  );
+  -webkit-mask-image: var(--wave-svg), linear-gradient(black, black);
+  -webkit-mask-position: top, bottom;
+  -webkit-mask-size: 100% var(--wave-height), 100% calc(100% - var(--wave-height));
+  -webkit-mask-repeat: no-repeat;
+  mask-image: var(--wave-svg), linear-gradient(black, black);
+  mask-position: top, bottom;
+  mask-size: 100% var(--wave-height), 100% calc(100% - var(--wave-height));
+  mask-repeat: no-repeat;
 }
 
 /* ── Cursor FX ─────────────────────────────────────────── */

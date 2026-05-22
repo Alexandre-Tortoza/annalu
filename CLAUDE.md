@@ -4,14 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-All commands run from `AnnaLu/` using pnpm.
+All commands run from the repo root using pnpm. Node `>=22.12.0` is required (`package.json` `engines`).
 
 ```bash
+pnpm install      # install deps from pnpm-lock.yaml
 pnpm dev          # dev server at localhost:4321
 pnpm build        # static build → dist/
 pnpm preview      # serve dist/ locally
-pnpm astro check  # TypeScript + Astro diagnostics
+pnpm astro check  # TypeScript + Astro diagnostics (use as the "test" gate before commit)
 ```
+
+There is no unit-test script. Before committing run `pnpm astro check` + `pnpm build`; for UI changes verify both PT and EN routes, theme toggle, language switch, and reduced-motion behavior in the browser.
 
 ## Stack
 
@@ -75,6 +78,7 @@ Components (all in `src/components/`):
 - `ArtworkCard.astro` — artwork summary card for landing page
 - `EditorialStack.astro` — scroll-triggered image pile (latest 3 artwork covers) with blockquote. Template only — GSAP animation lives in BaseLayout.
 - `MosaicRow.astro` — 12-column CSS grid row for gallery mosaic
+- `AboutArtist.astro` — artist bio section on the landing page
 
 ### Helpers
 
@@ -93,3 +97,8 @@ Key constants in the GSAP block:
 ### SEO
 
 Every page has unique `<title>` in format `"Page Title | AnnaLu"`. JSON-LD `VisualArtwork` on artwork detail pages. Canonical URLs absolute. hreflang alternates on all pages. Sitemap auto-generated.
+
+## Deeper docs
+
+`docs/` contains longer-form references; consult them when the CLAUDE.md summary is not enough:
+`ARCHITECTURE.md`, `COMPONENTS.md`, `CONTENT.md`, `i18n.md`, `THEMING.md`, `GSAP.md`, `SEO.md`, `CONFIG.md`, `SETUP.md`, `STRUCTURE.md`, `CODEBASE.md`. `AGENTS.md` at the repo root holds contribution conventions (Conventional Commits, PR expectations).
